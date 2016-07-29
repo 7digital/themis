@@ -28,6 +28,6 @@ lint:              ## Run code linter to check code style
 	($(VENV_RUN); pep8 --max-line-length=120 --ignore=E128 --exclude=web,bin,$(VENV_DIR) .)
 
 server:            ## Start the server on port 8081
-	($(VENV_RUN) && eval `ssh-agent -s` && PYTHONPATH=$(dir)/src src/themis/main.py server_and_loop --port=8081 --log=themis.log)
+	($(VENV_RUN) && eval `ssh-agent -s` && PYTHONPATH=$(dir)/src src/themis/main.py server_and_loop --port=8082 --log=themis.log)
 
 .PHONY: build test

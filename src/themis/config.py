@@ -82,6 +82,8 @@ def init_clusters_file():
                     cluster['type'] = 'Presto'
                 if app['Name'] == 'Ganglia':
                     has_ganglia = True
+
+            print has_ganglia
             if has_ganglia:
                 LOG.info('Getting details for cluster %s' % c['Id'])
                 # get private IP address of cluster

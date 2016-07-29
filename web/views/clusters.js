@@ -94,8 +94,8 @@
       };
     };
 
-    $scope.format_number = function(value, digits_after_comma=2) {
-      return parseFloat('' + value).toFixed(digits_after_comma);
+    $scope.format_number = function(value) {
+      return parseFloat('' + value).toFixed(2);
     };
 
     $scope.format_percent = function(value) {
@@ -141,8 +141,8 @@
       return Math.floor(seconds) + " seconds";
     };
 
-    $scope.format_currency = function(amount, currency='USD', digits_after_comma=2) {
-      return currency + ' ' + $scope.format_number(amount, digits_after_comma);
+    $scope.format_currency = function(amount, currency, digits_after_comma) {
+      return 'USD' + ' ' + $scope.format_number(amount, 2);
     };
 
     $scope.arrayRemove = function(array, el) {

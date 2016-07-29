@@ -11,6 +11,7 @@ from scipy import integrate
 from themis import constants
 from themis.util import aws_common, common, expr
 from themis.util.common import *
+from themis.util.aws_common import *
 from themis.util.remote import run_ssh
 
 # logger
@@ -56,7 +57,7 @@ def get_node_load_part(cluster_ip, cluster_id, host, type, monitoring_interval_s
     start_time, end_time = get_start_and_end(diff_secs, format)
     type_param = 'mem_report' if type == 'mem' else 'cpu_report' if type == 'cpu' else 'invalid'
     url = 'http://%s/ganglia/graph.php?h=%s&cs=%s&ce=%s&c=%s&g=%s&json=1' % (
-        cluster_ip, host, start_time, end_time, cluster_id, type_param)
+        cluster_ip, hostname_to_ip(host), start_time, end_time, cluster_id, type_param)
     cmd = "curl --connect-timeout %s '%s' 2> /dev/null" % (CURL_CONNECT_TIMEOUT, url)
     result = run(cmd, GANGLIA_CACHE_TIMEOUT)
     result = json.loads(result)
@@ -322,6 +323,8 @@ def execute_dsl_string(str, context, config=None):
     now_override = themis.config.get_value(constants.KEY_NOW, config=config, default=None)
     if now_override:
         now = now_override
+    print 'execute'
+    print str
     return eval(str)
 
 

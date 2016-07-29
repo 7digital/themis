@@ -9,6 +9,7 @@ from themis import config
 from themis.constants import *
 from themis.util import common, monitoring, aws_common, aws_pricing
 from themis.util.aws_common import INSTANCE_GROUP_TYPE_TASK
+from themis.util.aws_common import *
 
 # logger
 LOG = common.get_logger(__name__)
@@ -82,7 +83,9 @@ def get_nodes_to_terminate(info, config=None):
 def get_nodes_to_add(info, config=None):
     cluster_id = info['cluster_id']
     expr = themis.config.get_value(KEY_UPSCALE_EXPR, config, section=cluster_id)
+    print expr
     num_upsize = monitoring.execute_dsl_string(expr, info, config)
+
     num_upsize = int(float(num_upsize))
     LOG.info("num_upsize: %s" % num_upsize)
     if num_upsize > 0:
@@ -117,7 +120,7 @@ def tick():
     LOG.info("Running next loop iteration")
     monitoring_interval_secs = int(config.get_value(KEY_MONITORING_INTERVAL_SECS))
     for cluster_id, details in CLUSTERS.iteritems():
-        cluster_ip = details['ip']
+        cluster_ip = details['ip_public']
         info = None
         try:
             info = monitoring.collect_info(details, monitoring_interval_secs=monitoring_interval_secs)
@@ -131,6 +134,7 @@ def tick():
                 if cluster_id in get_autoscaling_clusters():
                     try:
                         nodes_to_terminate = get_nodes_to_terminate(info)
+                        print nodes_to_terminate
                         if len(nodes_to_terminate) > 0:
                             for node in nodes_to_terminate:
                                 terminate_node(cluster_ip, node['ip'], node['gid'])

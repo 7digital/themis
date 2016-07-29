@@ -96,7 +96,7 @@ def set_config(section):
     appConfig = config.read(section=section)
     return jsonify({'config': appConfig})
 
-
+from themis.util.aws_common import *
 @app.route('/restart', methods=['POST'])
 def restart_node():
     """ Restart a cluster node
@@ -114,7 +114,7 @@ def restart_node():
             cluster_ip = details['ip']
             tasknodes_group = aws_common.get_instance_group_for_node(cluster_id, node_host)
             if tasknodes_group:
-                server.terminate_node(cluster_ip, node_host, tasknodes_group)
+                server.terminate_node(cluster_ip, hostname_to_ip(node_host), tasknodes_group)
                 return jsonify({'result': 'SUCCESS'})
     return jsonify({'result': 'Invalid cluster ID provided'})
 
